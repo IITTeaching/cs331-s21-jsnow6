@@ -22,7 +22,18 @@ def captured_output():
 
 # implement this function
 def is_perfect(n):
-    pass
+    list = []
+	sum = 0
+	if n == 1:
+		return False
+	for i in range(1, n):
+		if n % i == 0:
+			list.append(i)
+	for i in range(len(list)):
+		sum = sum + list[i]
+	if sum == n:
+		return True
+	return False
 
 # (3 points)
 def test1():
@@ -40,7 +51,14 @@ def test1():
 
 # implement this function
 def multiples_of_3_and_5(n):
-    pass
+    list = []
+	sum = 0
+	for i in range(1, n):
+		if i % 3 == 0 or i % 5 == 0:
+			list.append(i)
+	for i in range(len(list)):
+		sum = sum + list[i]
+	return sum
 
 # (3 points)
 def test2():
@@ -53,7 +71,14 @@ def test2():
 # EXERCISE 3
 #################################################################################
 def integer_right_triangles(p):
-    pass
+    count = 0
+	for i in range(1, p):
+		for j in range(i, p):
+			for k in range(j, p):
+				if i + j + k == p:
+					if i * i + j * j == k*k:
+						count = count + 1
+	return count
 
 def test3():
     tc = unittest.TestCase()
@@ -67,7 +92,37 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    pass
+    l = len(chars)
+	count = 1
+	tracker = 1
+	max = l*2-1+l*2-2
+	if l == 1:
+		print(chars)
+	else:
+		while count <= l*2-1:
+			if count == 1 or count == l*2-1:
+				line = chars[l-1].center(max, '.')
+				print(line)
+				tracker = tracker + 1
+			elif count == l:
+				chs = chars[::-1]+chars[1:l]
+				str = '.'.join(chs)
+				print(str)
+				tracker = tracker - 1
+			else:
+				if count < l:
+					chs = chars[l:l-tracker-1:-1]+chars[l-tracker+1:l]
+					str = '.'.join(chs)
+					line = str.center(max, '.')
+					print(line)
+					tracker = tracker + 1
+				else:
+					chs = chars[l:l-tracker-1:-1]+chars[l-tracker+1:l]
+					str = '.'.join(chs)
+					line = str.center(max, '.')
+					print(line)
+					tracker = tracker - 1
+			count = count + 1
 
 def test4():
     tc = unittest.TestCase()
