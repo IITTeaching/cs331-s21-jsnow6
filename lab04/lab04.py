@@ -321,16 +321,9 @@ class ArrayList:
     def __iter__(self):
         """Supports iteration (via `iter(self)`)"""
         ### BEGIN SOLUTION
-        self.d = -1
-        return self
+       for i in range(self.len):
+            yield self[i]
         ### END SOLUTION
-    def __next__(self):
-        if self.d < self.len-1:
-            self.d += 1
-            return self[self.d]
-        else:
-            raise StopIteration
-
 
 ################################################################################
 # TEST CASES
