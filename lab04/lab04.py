@@ -258,7 +258,7 @@ class ArrayList:
             raise ValueError
         else:
             if j < 0:
-                j = j + self.len 
+                j = j + self.len
             for l in range(i, j):
                 if self[l] == value:
                     return l
@@ -321,7 +321,7 @@ class ArrayList:
     def __iter__(self):
         """Supports iteration (via `iter(self)`)"""
         ### BEGIN SOLUTION
-       for i in range(self.len):
+        for i in range(self.len):
             yield self[i]
         ### END SOLUTION
 
