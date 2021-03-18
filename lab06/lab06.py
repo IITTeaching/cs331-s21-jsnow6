@@ -51,6 +51,22 @@ def check_delimiters(expr):
     delim_closers = '})]>'
 
     ### BEGIN SOLUTION
+    s = Stack()
+    for c in expr:
+        for i in range(len(delim_openers)):
+            if c == delim_openers[i]:
+                s.push(c)
+            elif c == delim_closers[i]:
+                try:
+                    ind = delim_openers.index(s.peek())
+                    ind2 = delim_closers.index(c)
+                    if ind == ind2:
+                        s.pop()
+                    else:
+                        return False
+                except:
+                    return False
+    return s.empty()
     ### END SOLUTION
 
 ################################################################################
@@ -121,6 +137,35 @@ def infix_to_postfix(expr):
     postfix = []
     toks = expr.split()
     ### BEGIN SOLUTION
+    for t in toks:
+        if t.isdigit():
+            postfix.append(t)
+        elif ops.empty() or ops.peek() == '(' or t == '(':
+            ops.push(t)
+        elif t == ')':
+            s = ops.pop()
+            while s != '(':
+                postfix.append(s)
+                s = ops.pop()
+        elif not ops.empty() and prec.get(t) > prec.get(ops.peek()):
+            ops.push(t)
+        elif not ops.empty() and prec.get(t) == prec.get(ops.peek()):
+            postfix.append(ops.pop())
+            ops.push(t)
+        else:
+            postfix.append(ops.pop())
+            if not ops.empty() and prec.get(t) < prec.get(ops.peek()):
+                while not ops.empty() and ops.peek() in prec and prec.get(t) < prec.get(ops.peek()):
+                    postfix.append(ops.pop())
+            if ops.empty() or ops.peek() == '(':
+                ops.push(t)
+            else:
+                postfix.append(ops.pop())
+                ops.push(t)
+    while not ops.empty():
+        o = ops.pop()
+        if o in prec:
+            postfix.append(o)
     ### END SOLUTION
     return ' '.join(postfix)
 
