@@ -211,19 +211,74 @@ class Queue:
 
     def enqueue(self, val):
         ### BEGIN SOLUTION
+	if self.tail == 0 and self.head == len(self.data)-1:
+            raise RuntimeError
+        if self.head == -1:
+            self.data[len(self.data)-1] = val
+            self.head = len(self.data)-1
+            self.tail = len(self.data)-1
+        elif self.head == len(self.data)-1:
+            lst = []
+            count = 0
+            for i in range(len(self.data)):
+                lst.append(self.data[i])
+                if self.data[i] != None: 
+                    count += 1
+            for j in range(0, len(self.data)-count-1):
+                self.data[j] = None
+            for k in range(len(self.data)-count-1, len(self.data)-1):
+                self.data[k] = lst[k+1]
+            self.data[len(self.data)-1] = val
+            self.tail = len(self.data)-count-1
+        else:
+            self.data[self.head+1] = val
+            self.head += 1
         ### END SOLUTION
 
     def dequeue(self):
         ### BEGIN SOLUTION
+	if self.head == -1:
+            raise RuntimeError
+        val = self.data[self.tail]
+        lst = []
+        count = 0
+        for i in range(len(self.data)):
+            lst.append(self.data[i])
+            if self.data[i] != None:
+                count += 1
+        if count == 1:
+            self.data[self.tail] = None 
+            self.tail = -1
+            self.head = -1
+        elif count == 2:
+            self.data[self.tail] = None
+            self.tail = self.head
+        else:
+            for j in range(0, self.tail):
+                self.data[j] = None
+            for k in range(self.tail, self.tail+count-1):
+                self.data[k] = lst[k+1]
+            for l in range(self.tail+count-1, len(self.data)):
+                self.data[l] = None
+            self.head -= 1
+        return val
         ### END SOLUTION
 
     def resize(self, newsize):
         assert(len(self.data) < newsize)
         ### BEGIN SOLUTION
+	newq = [None] * newsize
+        for i in range(len(self.data)):
+            newq[i] = self.data[i]
+        self.data = newq
         ### END SOLUTION
 
     def empty(self):
         ### BEGIN SOLUTION
+	for i in range(len(self.data)):
+            if self.data[i] != None:
+                return False
+        return True
         ### END SOLUTION
 
     def __bool__(self):
@@ -239,6 +294,8 @@ class Queue:
 
     def __iter__(self):
         ### BEGIN SOLUTION
+	for i in range(self.tail, self.head):
+            yield self.data[i]
         ### END SOLUTION
 
 ################################################################################
