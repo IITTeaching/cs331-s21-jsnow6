@@ -211,7 +211,7 @@ class Queue:
 
     def enqueue(self, val):
         ### BEGIN SOLUTION
-	if self.tail == 0 and self.head == len(self.data)-1:
+        if self.tail == 0 and self.head == len(self.data)-1:
             raise RuntimeError
         if self.head == -1:
             self.data[len(self.data)-1] = val
@@ -237,7 +237,7 @@ class Queue:
 
     def dequeue(self):
         ### BEGIN SOLUTION
-	if self.head == -1:
+        if self.head == -1:
             raise RuntimeError
         val = self.data[self.tail]
         lst = []
@@ -267,7 +267,7 @@ class Queue:
     def resize(self, newsize):
         assert(len(self.data) < newsize)
         ### BEGIN SOLUTION
-	newq = [None] * newsize
+        newq = [None] * newsize
         for i in range(len(self.data)):
             newq[i] = self.data[i]
         self.data = newq
@@ -275,7 +275,7 @@ class Queue:
 
     def empty(self):
         ### BEGIN SOLUTION
-	for i in range(len(self.data)):
+        for i in range(len(self.data)):
             if self.data[i] != None:
                 return False
         return True
@@ -294,7 +294,7 @@ class Queue:
 
     def __iter__(self):
         ### BEGIN SOLUTION
-	for i in range(self.tail, self.head):
+        for i in range(self.tail, self.head):
             yield self.data[i]
         ### END SOLUTION
 
