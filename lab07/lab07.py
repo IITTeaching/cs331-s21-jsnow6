@@ -12,10 +12,6 @@ class ExtensibleHashTable:
         self.buckets = [None] * n_buckets
         self.nitems = 0
 
-    def find_bucket(self, key):
-        # BEGIN_SOLUTION
-        # END_SOLUTION
-
     def __getitem__(self,  key):
         # BEGIN_SOLUTION
         h = key % self.n_buckets 
