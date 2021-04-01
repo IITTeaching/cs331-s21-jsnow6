@@ -18,14 +18,40 @@ class ExtensibleHashTable:
 
     def __getitem__(self,  key):
         # BEGIN_SOLUTION
+        h = key % self.n_buckets 
+        bucket = self.buckets[h]
+        if bucket is None:
+            raise KeyError
+        return bucket[key]
         # END_SOLUTION
 
     def __setitem__(self, key, value):
         # BEGIN_SOLUTION
+        h = key % self.n_buckets
+        if self.buckets[h] is None:
+            self.buckets[h] = {key:value}
+        else:
+            self.buckets[h][key] = value
+        self.nitems += 1
+        if self.nitems > self.n_buckets * self.fillfactor:
+            oldbuckets = self.buckets
+            self.n_buckets = self.n_buckets * 2
+            self.buckets = [None] * self.n_buckets
+            for el in oldbuckets:
+                if el is not None:
+                    for k in el.keys():
+                        h = k % self.n_buckets
+                        if self.buckets[h] is None:
+                            self.buckets[h] = {k:el[k]}
+                        else:
+                            self.buckets[h][k] = el[k]
         # END_SOLUTION
 
     def __delitem__(self, key):
         # BEGIN SOLUTION
+        h = key % self.n_buckets
+        self.buckets[h] = None
+        self.nitems -= 1
         # END SOLUTION
 
     def __contains__(self, key):
@@ -43,6 +69,10 @@ class ExtensibleHashTable:
 
     def __iter__(self):
         ### BEGIN SOLUTION
+        for i in self.buckets:
+            if i is not None:
+                for k in i.keys():
+                    yield k
         ### END SOLUTION
 
     def keys(self):
@@ -50,10 +80,18 @@ class ExtensibleHashTable:
 
     def values(self):
         ### BEGIN SOLUTION
+        for i in self.buckets:
+            if i is not None:
+                for k in i.keys():
+                    yield i[k]
         ### END SOLUTION
 
     def items(self):
         ### BEGIN SOLUTION
+        for i in self.buckets:
+            if i is not None:
+                for k in i.keys():
+                    yield (k, i[k])
         ### END SOLUTION
 
     def __str__(self):
