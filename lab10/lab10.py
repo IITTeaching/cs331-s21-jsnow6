@@ -15,6 +15,9 @@ class AVLTree:
 
         def rotate_left(self):
             ### BEGIN SOLUTION
+            n = self.right
+            self.val, n.val = n.val, self.val
+            self.right, n.right, self.left, n.left = n.right, n.left, n, self.left
             ### END SOLUTION
 
         @staticmethod
@@ -31,16 +34,77 @@ class AVLTree:
     @staticmethod
     def rebalance(t):
         ### BEGIN SOLUTION
+        l = AVLTree.Node.height(t.left)
+        r = AVLTree.Node.height(t.right)
+        if l > r+1:
+            lr = AVLTree.Node.height(t.left.right)
+            ll = AVLTree.Node.height(t.left.left)
+            if lr is not None and ll is not None:
+                if lr >= ll+1:
+                    t.left.rotate_left()
+            t.rotate_right()
+        elif r > l+1:
+            rr = AVLTree.Node.height(t.right.right)
+            rl = AVLTree.Node.height(t.right.left)
+            if rr is not None and rl is not None:
+                if rl >= rr+1:
+                    t.right.rotate_right()
+            t.rotate_left()
         ### END SOLUTION
 
     def add(self, val):
         assert(val not in self)
         ### BEGIN SOLUTION
+        def rec_add(n):
+            if not n:
+                return AVLTree.Node(val)
+            elif val < n.val:
+                n.left = rec_add(n.left)
+            else:
+                n.right = rec_add(n.right)
+            AVLTree.rebalance(n)
+            return n
+        self.root = rec_add(self.root)
+        self.size += 1
         ### END SOLUTION
 
     def __delitem__(self, val):
         assert(val in self)
         ### BEGIN SOLUTION
+        def rec_del(n):
+            if n.val > val:
+                n.left = rec_del(n.left)
+            elif n.val < val:
+                n.right = rec_del(n.right)
+            else:
+                if n.right is None and n.left is None:
+                    return None
+                elif n.left is None:
+                    return n.right
+                elif n.right is None:
+                    return n.left
+                else:
+                    node = n.left
+                    if node.right is None:
+                        n.left = node.left
+                    else:
+                        p = node
+                        node = p.right
+                        fix = [p]
+                        while node.right:
+                            p = p.right
+                            fix.append(p)
+                            node = node.right
+                        p.right = node.left
+                        for x in fix[::-1]:
+                            if abs(AVLTree.Node.height(x.left)- AVLTree.Node.height(x.right)) == 2:
+                                AVLTree.rebalance(x)
+                    n.val = node.val
+            if abs(AVLTree.Node.height(n.left)-AVLTree.Node.height(n.right)) == 2:
+                AVLTree.rebalance(n)
+            return n
+        self.root = rec_del(self.root)
+        self.size += 1
         ### END SOLUTION
 
     def __contains__(self, val):
